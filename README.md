@@ -1,24 +1,14 @@
 # README
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+This is a Mod 3 Project for Turing School of Software and Design.
 
-Things you may want to cover:
+# Project Information:
 
-* Ruby version
+Main Page:
+https://backend.turing.edu/module3/projects/market_money/
 
-* System dependencies
+Requirements: 
+https://backend.turing.edu/module3/projects/market_money/requirements
 
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+DTR:
+https://docs.google.com/document/d/1Cizl4mGa1aTzIx-LIuF51AmEvfoQrpzs3BDZoiuqy00/edit
