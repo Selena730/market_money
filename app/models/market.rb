@@ -10,4 +10,8 @@ class Market < ApplicationRecord
   validates :zip, presence: true
   validates :lat, presence: true
   validates :lon, presence: true
+
+  def vendor_count_calc 
+    vendors.count
+  end
 end
