@@ -44,12 +44,28 @@ RSpec.describe 'Api::V0::Vendors', type: :request do
           description: '',
           contact_name: '',
           contact_phone: '',
+          credit_accepted: true
+        }
+      end
+
+      let(:invalid_credit_accepted) do
+        {
+          name: 'Test',
+          description: 'Testy test',
+          contact_name: 'Dr. Testy Test Jr. III Esq.',
+          contact_phone: '999-999-9999',
           credit_accepted: nil
         }
       end
 
       it 'returns a bad request status and error message' do
         post '/api/v0/vendors', params: { vendor: invalid_attributes }
+        expect(response).to have_http_status(:bad_request)
+        expect(JSON.parse(response.body)['errors']).to be_present
+      end
+
+      it 'returns a bad request status if "credit_accepted" value is nil' do
+        post '/api/v0/vendors', params: { vendor: invalid_credit_accepted }
         expect(response).to have_http_status(:bad_request)
         expect(JSON.parse(response.body)['errors']).to be_present
       end
