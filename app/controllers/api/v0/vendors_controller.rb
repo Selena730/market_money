@@ -20,6 +20,18 @@ class Api::V0::VendorsController < ApplicationController
     end
   end
 
+  def destroy
+    vendor = Vendor.find_by(id: params[:id])
+
+    if vendor
+      vendor.destroy
+      # https://api.rubyonrails.org/v7.1.3/classes/ActionController/Head.html
+      head :no_content
+    else
+      render json: { errors: ['Vendor not found'] }, status: :not_found
+    end
+  end
+
   private
 
   def vendor_params
