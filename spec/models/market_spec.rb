@@ -16,4 +16,13 @@ RSpec.describe Market, type: :model do
     it { should have_many(:market_vendors) }
     it { should have_many(:vendors).through(:market_vendors) }
   end
+
+  describe '#vendor_count_calc' do
+    it 'returns the number of associated vendors' do
+      market = create(:market)  
+      create_list(:market_vendor, 5, market: market) 
+
+      expect(market.vendor_count_calc).to eq(5)
+    end
+  end
 end
