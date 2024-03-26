@@ -71,4 +71,30 @@ RSpec.describe 'Api::V0::Vendors', type: :request do
       end
     end
   end
+
+  describe 'DELETE /api/v0/vendors/:id' do
+    context 'with a valid id' do
+      let!(:vendor) { create(:vendor) }
+
+      it 'deletes the vendor' do
+        expect {
+          delete "/api/v0/vendors/#{vendor.id}"
+        }.to change(Vendor, :count).by(-1)
+      end
+
+      it 'returns a 204 status code' do
+        delete "/api/v0/vendors/#{vendor.id}"
+        expect(response).to have_http_status(:no_content)
+      end
+    end
+
+    context 'with an invalid id' do
+      it 'returns a 404 status code and error message' do
+        delete '/api/v0/vendors/999'
+        expect(response).to have_http_status(:not_found)
+        expect(JSON.parse(response.body)).to include('errors')
+        expect(JSON.parse(response.body)['errors']).to include('Vendor not found')
+      end
+    end
+  end
 end
