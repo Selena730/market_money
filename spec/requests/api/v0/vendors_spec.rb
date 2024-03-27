@@ -97,4 +97,42 @@ RSpec.describe 'Api::V0::Vendors', type: :request do
       end
     end
   end
+
+  describe 'PATCH /api/v0/vendors/:id' do
+    let!(:vendor) { create(:vendor) }
+
+    context 'with valid parameters' do
+      let(:updated_attributes) { attributes_for(:vendor, name: 'Updated Vendor') }
+
+      it 'updates the vendor' do
+        patch "/api/v0/vendors/#{vendor.id}", params: { vendor: updated_attributes }
+        vendor.reload
+        expect(vendor.name).to eq('Updated Vendor')
+      end
+
+      it 'returns the updated vendor' do
+        patch "/api/v0/vendors/#{vendor.id}", params: { vendor: updated_attributes }
+        expect(response).to have_http_status(:ok)
+      end
+    end
+
+    context 'with invalid parameters' do
+      let(:invalid_attributes) { build(:vendor, name: '').attributes }
+
+      it 'returns a bad request status and error messages' do
+        patch "/api/v0/vendors/#{vendor.id}", params: { vendor: invalid_attributes }
+        expect(response).to have_http_status(:bad_request)
+        expect(JSON.parse(response.body)['errors']).to be_present
+      end
+    end
+
+    context 'with a non-existent vendor' do
+      it 'returns a 404 status code and error message' do
+        patch '/api/v0/vendors/999', params: { vendor: attributes_for(:vendor) }
+        expect(response).to have_http_status(:not_found)
+        expect(JSON.parse(response.body)).to include('errors')
+        expect(JSON.parse(response.body)['errors']).to include('Vendor not found')
+      end
+    end
+  end
 end
