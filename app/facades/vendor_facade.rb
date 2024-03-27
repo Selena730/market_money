@@ -12,4 +12,8 @@ class VendorFacade
     vendor.destroy if vendor
     vendor
   end
+
+  def self.update_vendor(vendor, vendor_params)
+    vendor.update(vendor_params)
+  end
 end

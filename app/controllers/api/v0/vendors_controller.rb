@@ -20,6 +20,20 @@ class Api::V0::VendorsController < ApplicationController
     end
   end
 
+  def update
+    vendor = VendorFacade.find_vendor(params[:id])
+    if vendor
+      VendorFacade.update_vendor(vendor, vendor_params)
+      if vendor.valid?
+        render json: VendorSerializer.new(vendor), status: :ok
+      else
+        render json: { errors: vendor.errors.full_messages }, status: :bad_request
+      end
+    else
+      render json: { errors: ['Vendor not found'] }, status: :not_found
+    end
+  end
+
   def destroy
     vendor = VendorFacade.destroy_vendor(params[:id])
 
