@@ -135,4 +135,46 @@ RSpec.describe 'Api::V0::Vendors', type: :request do
       end
     end
   end
+
+  describe "GET /api/v0/markets/:market_id/vendors" do
+    it "returns all vendors for the market with a status of 200" do #happy path
+      market = create(:market)
+      vendors = create_list(:vendor, 2)
+      vendors.each do |vendor|
+        MarketVendor.create(market: market, vendor: vendor)
+      end
+    
+      get "/api/v0/markets/#{market.id}/vendors"
+    
+      expect(response).to have_http_status(200)
+    
+      json_response = JSON.parse(response.body)
+      expect(json_response['data'].length).to eq(2) 
+      vendor_attributes = json_response['data'].first['attributes']
+      expect(vendor_attributes).to include(
+        'name',
+        'description',
+        'contact_name',
+        'contact_phone',
+        'credit_accepted'
+      )
+    end
+
+    
+    it "returns a 404 status and an error message for an invalid market id" do #sad path
+      invalid_id = 123123123123
+    
+      get "/api/v0/markets/#{invalid_id}/vendors"
+    
+      expect(response).to have_http_status(404)
+      expect(response).to_not be_successful
+    
+      json_response = JSON.parse(response.body, symbolize_names: true)
+    
+      expect(json_response[:errors]).to be_a(Array)
+      expect(json_response[:errors].first).to include(
+        detail: "Couldn't find Market with 'id'=#{invalid_id}"
+      )
+    end
+  end
 end
