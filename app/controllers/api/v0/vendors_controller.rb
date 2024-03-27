@@ -22,6 +22,7 @@ class Api::V0::VendorsController < ApplicationController
 
   def update
     vendor = VendorFacade.find_vendor(params[:id])
+
     if vendor
       VendorFacade.update_vendor(vendor, vendor_params)
       if vendor.valid?
@@ -45,6 +46,14 @@ class Api::V0::VendorsController < ApplicationController
   end
 
   private
+
+  def render_not_found
+    render json: { errors: ['Vendor not found'] }, status: :not_found
+  end
+
+  def render_errors(vendor)
+    render json: { errors: vendor.errors.full_messages }, status: :bad_request
+  end
 
   def vendor_params
     params.require(:vendor).permit(:name, :description, :contact_name, :contact_phone, :credit_accepted)
