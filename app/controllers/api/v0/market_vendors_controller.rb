@@ -7,8 +7,8 @@ class Api::V0::MarketVendorsController < ApplicationController
             render json: { errors: ["Market ID and Vendor ID must be provided"] }, status: :bad_request
             return
         end
-        market = Market.find(params[:market_id])
-        vendor = Vendor.find(params[:vendor_id])
+        market = Market.find_by(id: params[:market_id])
+        vendor = Vendor.find_by(id: params[:vendor_id])
         # binding.pry
         
         
