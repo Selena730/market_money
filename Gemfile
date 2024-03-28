@@ -43,6 +43,7 @@ group :development, :test do
   gem "rspec-rails"
   gem "launchy"
   gem "simplecov"
+  gem "faraday"
 end
 
 group :development do
