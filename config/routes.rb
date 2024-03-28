@@ -15,6 +15,7 @@ Rails.application.routes.draw do
       resources :markets, only: [:index, :show] do
         resources :vendors, only: [:index]
       end
+      get '/markets/:id/nearest_atms', to: 'markets#nearest_atms'
     end
   end
 end
