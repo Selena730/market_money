@@ -1,4 +1,4 @@
-requiire 'faraday'
+require 'faraday'
 
 class Api::V0::MarketsController < ApplicationController
     def index
@@ -17,16 +17,18 @@ class Api::V0::MarketsController < ApplicationController
     end
 
     def nearest_atms
-        #find the market
+        market = Market.find_by(id: params[:id])
+        result = AtmsFinderService.new.find_nearest_atms(market)
 
-        #if the market is not found, return a 404
-
-        #this will be in a service:
-        #make a request to tomtom
-        #https://developer.tomtom.com/search-api/documentation/search-service/category-search
-
-        #parse the response
-        #if successful - render the data with a status of ok
-        #else - render an unprocessable_entity error
+        if result[:errors].present?
+            if result[:errors].include?('Market not found')
+                status = :not_found
+            else
+                status = :unprocessable_entity
+            end
+            render json: { errors: result[:errors] }, status: status
+        else
+            render json: { data: result[:data] }, status: :ok
+        end
     end
 end
