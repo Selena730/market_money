@@ -9,7 +9,6 @@ class Api::V0::MarketVendorsController < ApplicationController
         end
         market = Market.find_by(id: params[:market_id])
         vendor = Vendor.find_by(id: params[:vendor_id])
-
         if market.nil? || vendor.nil?
             render json: { errors: ["Invalid Market ID or Vendor ID"] }, status: :not_found
             return
