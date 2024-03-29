@@ -43,6 +43,7 @@ group :development, :test do
   gem "rspec-rails"
   gem "launchy"
   gem "simplecov"
+  gem "faraday"
 end
 
 group :development do
@@ -55,4 +56,6 @@ group :test do
   gem "factory_bot_rails"
   gem 'faker'
   gem "capybara"
+  gem 'vcr'
+  gem 'webmock'
 end
