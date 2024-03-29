@@ -55,7 +55,7 @@ RSpec.describe 'MarketVendors API', type: :request do
 
             expect(response).to have_http_status(:not_found)
             expect(JSON.parse(response.body)).to eq({"error" => "MarketVendor not found"})
-
+        end
 
         it 'returns a 422 status and an error message if market_vendor already exists' do
             market = create(:market)
