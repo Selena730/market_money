@@ -25,15 +25,6 @@ class Api::V0::MarketsController < ApplicationController
           render json: { errors: [{ detail: error_message }] }, status: :unprocessable_entity
         end
     end
-    
-    private
-      
-    def search_params_valid?
-        return false if params[:city].present? && params[:state].blank?
-        return false if params[:city].present? && params[:name].present? && params[:state].blank?
-        true
-    end
-end
 
     def nearest_atms
         market = Market.find_by(id: params[:id])
@@ -49,5 +40,13 @@ end
         else
             render json: { data: result[:data] }, status: :ok
         end
+    end
+
+    private
+
+    def search_params_valid?
+        return false if params[:city].present? && params[:state].blank?
+        return false if params[:city].present? && params[:name].present? && params[:state].blank?
+        true
     end
 end
