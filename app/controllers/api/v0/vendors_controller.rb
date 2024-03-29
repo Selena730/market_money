@@ -2,17 +2,17 @@ class Api::V0::VendorsController < ApplicationController
   rescue_from ActiveRecord::RecordNotFound, with: :record_not_found
 
   def show
-    vendor = VendorFacade.find_vendor(params[:id])
+    vendor = Vendor.find_vendor(params[:id])
 
     if vendor
       render_vendor(vendor, status = :ok)
     else
-      render_vendor_not_found
+      render_not_found
     end
   end
 
   def create
-    vendor = VendorFacade.create_vendor(vendor_params)
+    vendor = Vendor.create_vendor(vendor_params)
 
     if vendor.save
       render_vendor(vendor, status = :created)
@@ -22,27 +22,27 @@ class Api::V0::VendorsController < ApplicationController
   end
 
   def update
-    vendor = VendorFacade.find_vendor(params[:id])
+    vendor = Vendor.find_vendor(params[:id])
 
     if vendor
-      VendorFacade.update_vendor(vendor, vendor_params)
+      Vendor.update_vendor(vendor, vendor_params)
       if vendor.valid?
         render_vendor(vendor, status = :ok)
       else
         render_errors(vendor)
       end
     else
-      render_vendor_not_found
+      render_not_found
     end
   end
 
   def destroy
-    vendor = VendorFacade.destroy_vendor(params[:id])
+    vendor = Vendor.destroy_vendor(params[:id])
 
     if vendor
       head :no_content
     else
-      render_vendor_not_found
+      render_not_found
     end
   end
 
@@ -60,7 +60,7 @@ class Api::V0::VendorsController < ApplicationController
 
   private
 
-  def render_vendor_not_found
+  def render_not_found
     render json: { errors: ['Vendor not found'] }, status: :not_found
   end
 
