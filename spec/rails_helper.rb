@@ -8,6 +8,15 @@ require 'rspec/rails'
 # Add additional requires below this line. Rails is not loaded until this point!
 require "simplecov"
 
+require 'vcr'
+
+VCR.configure do |config|
+  config.cassette_library_dir = "spec/fixtures/vcr_cassettes"
+  config.hook_into :webmock
+  config.configure_rspec_metadata!
+  config.allow_http_connections_when_no_cassette = true
+end
+
 SimpleCov.start "rails" do
   add_group "Facades", "app/facades"
   add_group "Serializers", "app/serializers"
@@ -81,4 +90,6 @@ RSpec.configure do |config|
   config.filter_rails_from_backtrace!
   # arbitrary gems may also be filtered via:
   # config.filter_gems_from_backtrace("gem name")
+
+
 end
