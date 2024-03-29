@@ -65,4 +65,47 @@ RSpec.describe "Api::V0::Markets", type: :request do
     end
   end
 
+  describe 'GET /api/v0/markets/search' do
+    let!(:market1) { create(:market, name: 'Farmers Market', city: 'Albuquerque', state: 'New Mexico') }
+    let!(:market2) { create(:market, name: 'Nob Hill Market', city: 'Albuquerque', state: 'New Mexico') }
+    let!(:market3) { create(:market, name: 'Sunday Market', city: 'Denver', state: 'Colorado') }
+
+    it 'returns markets in the specified state' do
+      get '/api/v0/markets/search', params: { state: 'New Mexico' }
+
+      expect(response).to have_http_status(:ok)
+      json_response = JSON.parse(response.body)
+      
+      expect(json_response['data'].size).to eq(2)
+    end
+
+    it 'returns markets in the specified state and city' do
+      get '/api/v0/markets/search', params: { state: 'New Mexico', city: 'Albuquerque' }
+
+      expect(response).to have_http_status(:ok)
+      json_response = JSON.parse(response.body)
+
+      expect(json_response['data'].size).to eq(2)
+    end
+
+    it 'returns markets matching all criteria' do
+      get '/api/v0/markets/search', params: { state: 'New Mexico', city: 'Albuquerque', name: 'Nob Hill' }
+
+      expect(response).to have_http_status(:ok)
+      json_response = JSON.parse(response.body)
+
+      expect(json_response['data'].size).to eq(1)
+      expect(json_response['data'][0]['attributes']['name']).to eq('Nob Hill Market')
+    end
+
+    it 'returns an error for invalid parameter' do
+      get '/api/v0/markets/search', params: { city: 'Albuquerque' }
+
+      expect(response).to have_http_status(:unprocessable_entity)
+      json_response = JSON.parse(response.body)
+
+      expect(json_response['errors']).to be_present
+      expect(json_response['errors'][0]['detail']).to eq('Invalid set of parameters. Please provide a valid set of parameters to perform a search with this endpoint.')
+    end
+  end
 end

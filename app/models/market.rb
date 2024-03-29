@@ -14,4 +14,14 @@ class Market < ApplicationRecord
   def vendor_count 
     vendors.count
   end
+
+  def self.search_by(state, city, name)
+    query = Market.all
+
+    query = query.where("state ILIKE ?", "%#{state}%") if state.present?
+    query = query.where("city ILIKE ?", "%#{city}%") if city.present?
+    query = query.where("name ILIKE ?", "%#{name}%") if name.present?
+
+    query
+  end
 end
